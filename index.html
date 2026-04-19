@@ -174,7 +174,7 @@
 <body>
 
 <div id="header">
-  <div class="gym-label">STRIKE GYM</div>
+  <div class="gym-label">STRIKE BOXING & FITNESS</div>
   <h1>APRIL/MAY CHALLENGE</h1>
   <div class="sub">BASELINE 4/18 · ENDS MAY 31</div>
 </div>
@@ -205,8 +205,8 @@ const BASELINE = {
   "Double Bar Rows": 15,
   "Hamstring Crab Tables": 20,
   "Double Sliders": 9,
-  "Dips (Ab Bench)": 6.5,
-  "Dips (Straight Legs)": 15,
+  "Tricep Dips (Hanging)": 6.5,
+  "Bench Tricep Dips": 15,
   "Pike Pushups": 10,
   "Pike Pushups (Knees on Bench)": 22,
   "Straight Leg Raises": 16,
@@ -221,8 +221,8 @@ const DAYS = {
     { name: "Plyo Pushups",                   phase: "Main",     note: "Do FIRST while fresh. 3×5-8 explosive reps. Power not volume — reset between each." },
     { name: "Pike Pushups",                   phase: "Main",     note: "3×8-12. Feet on floor. Drives shoulder strength directly." },
     { name: "Pike Pushups (Knees on Bench)",  phase: "Main",     note: "3×8-12. More load than floor version — sub in when floor feels easy." },
-    { name: "Dips (Straight Legs)",           phase: "Main",     note: "3×10-12. Full range, control the descent. Legs straight increases the challenge." },
-    { name: "Dips (Ab Bench)",                phase: "Main",     note: "3×10-12. Easier variation — use as burnout or if straight legs are too much." },
+    { name: "Bench Tricep Dips",              phase: "Main",     note: "3×10-12. Full range, control the descent. Legs straight increases the challenge." },
+    { name: "Tricep Dips (Hanging)",          phase: "Main",     note: "3×10-12. Easier variation — use as burnout or if straight legs are too much." },
     { name: "Regular Pushups",                phase: "Finisher", note: "AMRAP. These hold up under fatigue — use them to burn out the session." },
   ],
   "Day B — Pull": [
@@ -268,6 +268,16 @@ let sessions = {};
 let activeDay = "Day A — Push";
 let currentView = "log";
 let inputs = {};
+
+function isSec(exName) { return exName.includes("(sec)"); }
+function fmtSec(val) {
+  const s = Math.round(val);
+  const m = Math.floor(s / 60);
+  const rem = s % 60;
+  return m > 0 ? `${m}:${String(rem).padStart(2,'0')}` : `:${String(rem).padStart(2,'0')}`;
+}
+function displayName(exName) { return exName.replace(/\s*\(sec\)/i, ''); }
+function fmtVal(exName, val) { return isSec(exName) ? fmtSec(val) : val; }
 
 function loadFromStorage() {
   try {
@@ -371,7 +381,7 @@ function renderLog() {
       ? `<div class="delta ${delta >= 0 ? 'up' : 'down'}">${delta >= 0 ? '+' : ''}${delta.toFixed(1)}</div>`
       : "";
     const bestHtml = best > (base ?? 0)
-      ? `<div class="best-label">BEST SO FAR: <span>${best}</span></div>`
+      ? `<div class="best-label">BEST SO FAR: <span>${fmtVal(ex.name, best)}</span></div>`
       : "";
 
     return `
@@ -379,18 +389,18 @@ function renderLog() {
       <div class="exercise-card">
         <div class="exercise-top">
           <div class="exercise-name-wrap">
-            <div class="exercise-name">${ex.name.toUpperCase()}</div>
+            <div class="exercise-name">${displayName(ex.name).toUpperCase()}</div>
             <div class="exercise-note">${ex.note}</div>
           </div>
           <div class="exercise-baseline">
             <div class="label">BASELINE</div>
-            <div class="value">${base ?? "—"}</div>
+            <div class="value">${base !== undefined ? fmtVal(ex.name, base) : "—"}</div>
           </div>
         </div>
         <div class="exercise-input-row">
           <input class="rep-input ${hasVal ? 'has-value' : ''}"
             type="number" inputmode="decimal"
-            placeholder="Today's reps"
+            placeholder="${isSec(ex.name) ? 'Today\'s seconds' : 'Today\'s reps'}"
             value="${hasVal ? val : ''}"
             data-key="${ex.name}_${i}"
             data-ex="${ex.name}"
@@ -514,14 +524,14 @@ function renderProgress() {
     return `<div class="progress-card">
       <div class="progress-top">
         <div>
-          <div class="progress-name">${ex.name.toUpperCase()}</div>
+          <div class="progress-name">${displayName(ex.name).toUpperCase()}</div>
           <div style="margin-top:4px">
             <span class="phase-pill" style="background:${phaseColor.bg};color:${phaseColor.text};font-size:8px;padding:2px 6px;border-radius:20px;letter-spacing:1px">${ex.phase}</span>
           </div>
         </div>
         <div class="progress-stats">
-          <div class="stat"><div class="slabel">BASE</div><div class="sval" style="color:#555">${base}</div></div>
-          <div class="stat"><div class="slabel">BEST</div><div class="sval" style="color:#f59e0b">${best}</div></div>
+          <div class="stat"><div class="slabel">BASE</div><div class="sval" style="color:#555">${fmtVal(ex.name, base)}</div></div>
+          <div class="stat"><div class="slabel">BEST</div><div class="sval" style="color:#f59e0b">${fmtVal(ex.name, best)}</div></div>
           <div class="stat"><div class="slabel">GAIN</div><div class="sval" style="color:${gain >= 0 ? '#22c55e' : '#ef4444'}">${gain >= 0 ? '+' : ''}${gain.toFixed(1)}</div></div>
         </div>
       </div>
@@ -546,8 +556,8 @@ function renderHistory() {
         ? ` <span style="color:${delta >= 0 ? '#22c55e' : '#ef4444'}">(${delta >= 0 ? '+' : ''}${delta.toFixed(1)})</span>`
         : "";
       return `<div class="history-row">
-        <span class="history-ex">${ex}</span>
-        <span class="history-val">${val}${deltaStr}</span>
+        <span class="history-ex">${displayName(ex)}</span>
+        <span class="history-val">${fmtVal(ex, val)}${deltaStr}</span>
       </div>`;
     }).join("");
     return `<div class="history-entry">
