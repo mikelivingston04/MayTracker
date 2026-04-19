@@ -5,18 +5,20 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0" />
   <title>Strike Challenge Tracker · Mike</title>
   <style>
+    @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@400;500;600;700&display=swap');
+
     * { box-sizing: border-box; margin: 0; padding: 0; }
 
     :root {
-      --bg: #0a0a0a;
-      --bg2: #0f0f0f;
-      --bg3: #111;
-      --bg4: #1a1a1a;
-      --border: #1f1f1f;
-      --text: #e5e5e5;
-      --muted: #555;
-      --muted2: #444;
-      --muted3: #333;
+      --bg: #141414;
+      --bg2: #1c1c1c;
+      --bg3: #202020;
+      --bg4: #2a2a2a;
+      --border: #303030;
+      --text: #f0f0f0;
+      --muted: #a0a0a0;
+      --muted2: #888;
+      --muted3: #666;
       --green: #22c55e;
       --red: #ef4444;
       --amber: #f59e0b;
@@ -26,7 +28,7 @@
     body {
       background: var(--bg);
       color: var(--text);
-      font-family: 'Courier New', monospace;
+      font-family: 'Oswald', system-ui, -apple-system, sans-serif;
       min-height: 100vh;
     }
 
@@ -70,7 +72,7 @@
       font-size: 10px;
       letter-spacing: 3px;
       cursor: pointer;
-      font-family: 'Courier New', monospace;
+      font-family: 'Arial', monospace;
       text-transform: uppercase;
       transition: color 0.2s;
     }
@@ -98,7 +100,7 @@
       letter-spacing: 1px;
       cursor: pointer;
       white-space: nowrap;
-      font-family: 'Courier New', monospace;
+      font-family: 'Arial', monospace;
       transition: color 0.2s;
     }
     #day-tabs button.active {
@@ -130,7 +132,7 @@
       padding: 10px 12px;
       color: var(--text);
       font-size: 16px;
-      font-family: 'Courier New', monospace;
+      font-family: 'Arial', monospace;
       outline: none;
     }
     #date-input:focus { border-color: var(--accent); }
@@ -169,7 +171,7 @@
       padding: 8px 10px;
       color: var(--text);
       font-size: 16px;
-      font-family: 'Courier New', monospace;
+      font-family: 'Arial', monospace;
       outline: none;
     }
     .rep-input:focus, .rep-input.has-value { border-color: var(--accent); }
@@ -200,7 +202,7 @@
       font-weight: 900;
       letter-spacing: 3px;
       cursor: pointer;
-      font-family: 'Courier New', monospace;
+      font-family: 'Arial', monospace;
       margin-bottom: 16px;
     }
     #save-btn:active { opacity: 0.85; }
